@@ -1,7 +1,3 @@
-// Package mestralive provides the team-facing Go SDK for in-process TLV fanout.
-//
-// Internet clients should attach via mestralive-live (JSON-WS). Hot-path server
-// publishes use opaque []byte through this SDK → pkg/fanout → certified runtime.
 package mestralive
 
 import (
@@ -11,14 +7,19 @@ import (
 	"github.com/mestralive/mestralive/pkg/fanout"
 )
 
-// Re-export core types so callers need one import.
+// Re-exported types (stable names for application imports).
 type (
-	Bus    = fanout.Bus
+	// Bus is an in-process pub/sub handle.
+	Bus = fanout.Bus
+	// Config configures Open.
 	Config = fanout.Config
+	// ConnID identifies an in-process connection created by Accept.
 	ConnID = fanout.ConnID
+	// Result is the outcome of one Publish.
 	Result = fanout.Result
 )
 
+// Re-exported sentinel errors.
 var (
 	ErrUnauthorized    = fanout.ErrUnauthorized
 	ErrUnsafeListen    = fanout.ErrUnsafeListen
@@ -27,36 +28,42 @@ var (
 	ErrNotSupported    = fanout.ErrNotSupported
 	ErrPayloadTooLarge = fanout.ErrPayloadTooLarge
 	ErrInvalidTopic    = fanout.ErrInvalidTopic
-	ErrDialUnsupported = errors.New("mestralive-go: dial mode not supported in v1 (use InProcess)")
+	// ErrDialUnsupported is returned by OpenDial in v1.
+	ErrDialUnsupported = errors.New("mestralive-go: dial mode not supported in v1 (use in-process Open)")
 )
 
 // Mode selects how the SDK reaches the bus.
 type Mode int
 
 const (
-	// ModeInProcess embeds pkg/fanout in this process (v1 default; lowest latency).
+	// ModeInProcess embeds the bus in this process (v1 default).
 	ModeInProcess Mode = iota
-	// ModeDial is reserved for a future private TCP/UDS path.
+	// ModeDial is reserved. OpenDial returns ErrDialUnsupported in v1.
 	ModeDial
 )
 
-// Open opens an in-process bus (ModeInProcess).
+// Open creates a bus using ModeInProcess. The bus is not started until Start.
+// ServiceToken is required (see docs/authentication.md).
 func Open(cfg Config) (*Bus, error) {
 	return fanout.Open(cfg)
 }
 
-// OpenFromEnv loads MESTRALIVE_SERVICE_TOKEN (required) and optional listen/owners.
+// OpenFromEnv is Open with ServiceToken from MESTRALIVE_SERVICE_TOKEN.
+//
+// Optional:
+//
+//	MESTRALIVE_FANOUT_LISTEN         — runtime ListenAddress (prefer empty)
+//	MESTRALIVE_FANOUT_ALLOW_PUBLIC=1 — allow non-loopback listen (discouraged)
 func OpenFromEnv() (*Bus, error) {
-	tok := os.Getenv("MESTRALIVE_SERVICE_TOKEN")
 	cfg := Config{
-		ServiceToken:   tok,
-		ListenAddress:  os.Getenv("MESTRALIVE_FANOUT_LISTEN"),
+		ServiceToken:      os.Getenv("MESTRALIVE_SERVICE_TOKEN"),
+		ListenAddress:     os.Getenv("MESTRALIVE_FANOUT_LISTEN"),
 		AllowPublicListen: os.Getenv("MESTRALIVE_FANOUT_ALLOW_PUBLIC") == "1",
 	}
 	return Open(cfg)
 }
 
-// OpenDial always fails in v1 — kept so callers get an explicit error.
+// OpenDial is not supported in v1. Prefer Open (in-process).
 func OpenDial(_ Config) (*Bus, error) {
 	return nil, ErrDialUnsupported
 }

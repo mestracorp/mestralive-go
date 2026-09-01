@@ -1,4 +1,6 @@
-// Example: in-process TLV publish/subscribe via mestralive-go.
+// Example: publish opaque TLV bytes to two in-process subscribers.
+//
+//	MESTRALIVE_SERVICE_TOKEN=dev-token go run .
 package main
 
 import (
@@ -10,34 +12,48 @@ import (
 )
 
 func main() {
-	tok := os.Getenv("MESTRALIVE_SERVICE_TOKEN")
-	if tok == "" {
-		tok = "dev-token"
+	token := os.Getenv("MESTRALIVE_SERVICE_TOKEN")
+	if token == "" {
+		log.Fatal("set MESTRALIVE_SERVICE_TOKEN")
 	}
-	bus, err := mestralive.Open(mestralive.Config{ServiceToken: tok, Owners: 1})
+
+	bus, err := mestralive.Open(mestralive.Config{
+		ServiceToken: token,
+		Owners:       1,
+	})
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("open: %v", err)
 	}
 	defer bus.Stop()
+
 	if err := bus.Start(); err != nil {
-		log.Fatal(err)
+		log.Fatalf("start: %v", err)
 	}
 
-	a, err := bus.Accept()
+	alice, err := bus.Accept()
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("accept alice: %v", err)
 	}
-	b, err := bus.Accept()
+	bob, err := bus.Accept()
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("accept bob: %v", err)
 	}
-	_ = bus.Subscribe(a, "demo")
-	_ = bus.Subscribe(b, "demo")
 
+	const topic = "demo.room"
+	if err := bus.Subscribe(alice, topic); err != nil {
+		log.Fatalf("subscribe alice: %v", err)
+	}
+	if err := bus.Subscribe(bob, topic); err != nil {
+		log.Fatalf("subscribe bob: %v", err)
+	}
+
+	// Opaque application bytes — not JSON.
 	tlv := []byte{0x01, 0x02, 0x03, 0xff}
-	res, err := bus.Publish("demo", 1, tlv)
+	res, err := bus.Publish(topic, 1, tlv)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("publish: %v", err)
 	}
-	fmt.Printf("subscribers=%d accepted=%d rejected=%d\n", res.Subscribers, res.Accepted, res.Rejected)
+
+	fmt.Printf("subscribers=%d accepted=%d rejected=%d disconnected=%d\n",
+		res.Subscribers, res.Accepted, res.Rejected, res.Disconnected)
 }
