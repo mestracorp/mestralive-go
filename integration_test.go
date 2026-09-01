@@ -6,7 +6,7 @@ import (
 	"sync/atomic"
 	"testing"
 
-	mestralive "github.com/mestracloud/mestralive-go"
+	mestralive "github.com/mestracorp/mestralive-go"
 )
 
 func TestContract_OpenSubPubStop(t *testing.T) {

@@ -13,7 +13,7 @@ Go SDK for **in-process TLV fanout** on the mestralive certified runtime.
 ## Install (local replace until published)
 
 ```bash
-go get github.com/mestracloud/mestralive-go@latest
+go get github.com/mestracorp/mestralive-go@latest
 # during development:
 # go.mod: replace github.com/mestralive/mestralive => ../mestralive
 ```
@@ -54,4 +54,4 @@ Or: `mestralive.OpenFromEnv()` with `MESTRALIVE_SERVICE_TOKEN` set.
 
 ## Module
 
-`github.com/mestracloud/mestralive-go`
+`github.com/mestracorp/mestralive-go`

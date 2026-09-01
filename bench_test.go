@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	mestralive "github.com/mestracloud/mestralive-go"
+	mestralive "github.com/mestracorp/mestralive-go"
 )
 
 // Phase 3.4: SDK Publish path should stay near pkg/fanout (no extra JSON).

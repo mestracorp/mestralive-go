@@ -1,4 +1,4 @@
-module github.com/mestracloud/mestralive-go
+module github.com/mestracorp/mestralive-go
 
 go 1.26.5
 

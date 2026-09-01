@@ -6,7 +6,7 @@ import (
 	"log"
 	"os"
 
-	mestralive "github.com/mestracloud/mestralive-go"
+	mestralive "github.com/mestracorp/mestralive-go"
 )
 
 func main() {
