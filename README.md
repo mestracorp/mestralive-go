@@ -41,6 +41,9 @@ Or: `mestralive.OpenFromEnv()` with `MESTRALIVE_SERVICE_TOKEN` set.
 - `Open` fails closed without a service token.
 - Public listen requires explicit opt-in (`AllowPublicListen` / env) — discouraged for v1.
 - Dial mode is **not supported** in v1 (`OpenDial` returns an error).
+- Topic names: `[A-Za-z0-9._\-/]` only (enforced by fanout).
+- Operator plane split: `mestralive/docs/fanout/phase-2/planes.md`
+- Lab gates: `mestralive/docs/fanout/phase-2/gate-results.md`
 
 ## Auth
 

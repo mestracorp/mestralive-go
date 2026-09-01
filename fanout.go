@@ -26,6 +26,7 @@ var (
 	ErrClosed          = fanout.ErrClosed
 	ErrNotSupported    = fanout.ErrNotSupported
 	ErrPayloadTooLarge = fanout.ErrPayloadTooLarge
+	ErrInvalidTopic    = fanout.ErrInvalidTopic
 	ErrDialUnsupported = errors.New("mestralive-go: dial mode not supported in v1 (use InProcess)")
 )
 
