@@ -2,6 +2,9 @@
 
 Go SDK for **in-process TLV fanout** on the mestralive certified runtime.
 
+> **Phase 0:** Contract freeze lives in the mestralive repo:  
+> `mestralive/docs/fanout/phase-0/`. Sign [EXIT.md](../mestralive/docs/fanout/phase-0/EXIT.md) before treating this SDK as Phase-complete. This tree is **provisional** until reconciled.
+
 | Plane | Use |
 |-------|-----|
 | **mestralive-live** (`/app/v1` JSON-WS) | Internet clients (PWA, partners) |
