@@ -28,6 +28,8 @@ var (
 	ErrNotSupported    = fanout.ErrNotSupported
 	ErrPayloadTooLarge = fanout.ErrPayloadTooLarge
 	ErrInvalidTopic    = fanout.ErrInvalidTopic
+	ErrShortBuffer     = fanout.ErrShortBuffer
+	ErrUnknownConn     = fanout.ErrUnknownConn
 	// ErrDialUnsupported is returned by OpenDial in v1.
 	ErrDialUnsupported = errors.New("mestralive-go: dial mode not supported in v1 (use in-process Open)")
 )

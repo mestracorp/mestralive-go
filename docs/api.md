@@ -21,10 +21,13 @@ OpenDial(Config) (*Bus, error) // always errors in v1
 (*Bus) Subscribe(conn ConnID, topic string) error
 (*Bus) Unsubscribe(conn ConnID, topic string) error
 (*Bus) Publish(topic string, typ uint16, payload []byte) (Result, error)
+(*Bus) Recv(conn ConnID, buf []byte) (n int, typ uint16, err error)
+(*Bus) RecvContext(ctx context.Context, conn ConnID, buf []byte) (n int, typ uint16, err error)
 ```
 
 - `typ` is your application message type (uint16). The bus does not interpret it.  
-- `payload` is opaque. Binary safe (including `0x00`).
+- `payload` is opaque. Binary safe (including `0x00`).  
+- `Recv` copies the next inbox frame into `buf`. No JSON. No TCP.
 
 ## Result
 

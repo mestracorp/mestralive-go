@@ -153,8 +153,22 @@ See the Agyraa-shaped spike: capability check **before** Publish —
 | `Start` / `Stop` | Start/stop the embedded runtime (`Stop` is idempotent) |
 | `Accept` | Admit an in-process connection id (subscriber endpoint) |
 | `Subscribe` / `Unsubscribe` | Topic membership for a connection |
-| `Publish` | Fan out opaque `[]byte` to current subscribers |
+| `Publish` | Fan out opaque `[]byte` to subscribers' Recv inboxes |
+| `Recv` / `RecvContext` | Blocking read of the next frame for a `ConnID` (no TCP) |
 | `OpenDial` | **Unsupported in v1** — returns an error (no `:9000` dial) |
+
+### Receive (in-process)
+
+```go
+buf := make([]byte, 4096)
+n, typ, err := bus.Recv(connID, buf)
+// or: bus.RecvContext(ctx, connID, buf)
+```
+
+- Payload bytes match what was passed to `Publish` (content-identical).
+- If `buf` is too small → `ErrShortBuffer` (message is **not** dropped; retry with a larger buffer).
+- `Stop` or `ctx` cancel unblocks `Recv` with an error.
+- If nobody calls `Recv`, inboxes fill and later `Publish` returns `Rejected` for those subscribers.
 
 ### `Publish` result
 
