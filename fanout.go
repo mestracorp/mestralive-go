@@ -20,11 +20,12 @@ type (
 )
 
 var (
-	ErrUnauthorized  = fanout.ErrUnauthorized
-	ErrUnsafeListen  = fanout.ErrUnsafeListen
-	ErrNotStarted    = fanout.ErrNotStarted
-	ErrClosed        = fanout.ErrClosed
-	ErrNotSupported  = fanout.ErrNotSupported
+	ErrUnauthorized    = fanout.ErrUnauthorized
+	ErrUnsafeListen    = fanout.ErrUnsafeListen
+	ErrNotStarted      = fanout.ErrNotStarted
+	ErrClosed          = fanout.ErrClosed
+	ErrNotSupported    = fanout.ErrNotSupported
+	ErrPayloadTooLarge = fanout.ErrPayloadTooLarge
 	ErrDialUnsupported = errors.New("mestralive-go: dial mode not supported in v1 (use InProcess)")
 )
 
